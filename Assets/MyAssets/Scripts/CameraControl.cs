@@ -4,28 +4,38 @@ using UnityEngine;
 
 public class CameraControl : MonoBehaviour
 {
-    [SerializeField] float mouseSensibility;
+    [SerializeField] Vector2 sensibilityMouse;
+    [SerializeField] Transform cam;
+
     float x, y;
-    Vector3 move;
-    Vector3 angle;
+    float angle;
 
-    public Vector2 MouseVector()
+    private void Start()
     {
-        x = Input.GetAxis("Mouse X");
-        y = Input.GetAxis("Mouse Y");
-
-        move = new Vector2(x, y);
-
-        return move;
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     private void Update()
     {
-        MouseMove();
-    }
+        x = Input.GetAxis("Mouse X");
+        y = Input.GetAxis("Mouse Y");
 
-    void MouseMove()
-    {
-        transform.Rotate(Vector3.up * MouseVector().x * mouseSensibility * Time.deltaTime);
+        if(x != 0 )
+        {
+            transform.Rotate(Vector3.up * x * sensibilityMouse.x);
+        }
+
+        if(y != 0)
+        {
+            angle = (cam.localEulerAngles.x - y * sensibilityMouse.y + 360) % 360;
+
+            if (angle > 180)
+            {
+                angle -= 360;
+            }
+            angle = Mathf.Clamp(angle, -20, 80);
+
+            cam.localEulerAngles = angle * Vector3.right;
+        }
     }
 }

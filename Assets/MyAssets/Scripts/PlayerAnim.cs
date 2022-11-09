@@ -28,4 +28,9 @@ public class PlayerAnim : MonoBehaviour
         anim.SetBool("Crouch", state);
         sneak = state;
     }
+
+    public void Jump()
+    {
+        anim.SetTrigger("Jump");
+    }
 }

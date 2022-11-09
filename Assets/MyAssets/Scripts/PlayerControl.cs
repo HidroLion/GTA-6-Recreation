@@ -4,8 +4,11 @@ public class PlayerControl : MonoBehaviour
 {
     [SerializeField] float speed;
     [SerializeField] float jumpForce;
+    [SerializeField] float rotateSpeed;
+
     public bool isGround;
     PlayerAnim playerAnim;
+    float sneakSpeed;
 
     float x, y;
     Vector3 move;
@@ -16,6 +19,8 @@ public class PlayerControl : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         playerAnim = GetComponent<PlayerAnim>();
+        sneakSpeed = speed / 2;
+
         isGround = true;
         running = false;
         crouch = false;
@@ -33,38 +38,35 @@ public class PlayerControl : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.LeftShift))
         {
-            crouch = !crouch;
-            Shift(crouch);
+            if(MovementVector() == Vector2.zero)
+            {
+                crouch = !crouch;
+                Shift(crouch);
+            }
         }
     }
 
     void Movement()
     {
         transform.position += transform.forward * MovementVector().y * speed * Time.deltaTime;
+        transform.Rotate(Vector3.up * rotateSpeed * MovementVector().x * Time.deltaTime);
 
-        if (MovementVector() != Vector2.zero && isGround && !running)
+        if(MovementVector().y != 0 && !running)
         {
-            if (!crouch)
-            {
-                playerAnim.Run(true);
-            }
-            else if (crouch)
-            {
+            if (crouch)
                 playerAnim.SneakRun(true);
-            }
+            else if (!crouch)
+                playerAnim.Run(true);
+
             running = true;
         }
-        
-        if(running && MovementVector() == Vector2.zero)
+        else if(MovementVector().y == 0 && running)
         {
-            if (!crouch)
-            {
-                playerAnim.Run(false);
-            }
-            else if (crouch)
-            {
+            if (crouch)
                 playerAnim.SneakRun(false);
-            }
+            else if (!crouch)
+                playerAnim.Run(false);
+
             running = false;
         }
     }
@@ -82,10 +84,18 @@ public class PlayerControl : MonoBehaviour
     void Jump()
     {
         rb.AddForce(Vector3.up * jumpForce);
+        crouch = false;
+        Shift(false);
+        playerAnim.Jump();
     }
 
     void Shift(bool state)
     {
         playerAnim.CrouchStand(state);
+
+        if (crouch)
+            speed = sneakSpeed;
+        else if (!crouch)
+            speed = sneakSpeed * 2;
     }
 }
