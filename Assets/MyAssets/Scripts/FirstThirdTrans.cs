@@ -5,12 +5,15 @@ using UnityEngine;
 public class FirstThirdTrans : MonoBehaviour
 {
     [SerializeField] GameObject freeLookCamera;
-    [SerializeField] GameObject fpsPlayer;
+    [SerializeField] public GameObject fpsPlayer;
     [SerializeField] GameObject cameraPlayer;
     [SerializeField] GameObject playerModel;
-    [SerializeField] Transform cameraFpsPos;
+    [SerializeField] public Transform cameraFpsPos;
 
     PlayerControl playerControl;
+    bool fpsMode;
+
+    public bool FpsMode { get => fpsMode; set => fpsMode = value; }
 
     private void Awake()
     {
@@ -30,6 +33,7 @@ public class FirstThirdTrans : MonoBehaviour
             fpsPlayer.SetActive(true);
 
             fpsPlayer.transform.position = cameraFpsPos.position;
+            FpsMode = true;
         }
 
         if (Input.GetButtonUp("Fire2"))
@@ -39,6 +43,8 @@ public class FirstThirdTrans : MonoBehaviour
             playerModel.SetActive(true);
             cameraPlayer.SetActive(true);
             freeLookCamera.SetActive(true);
+
+            FpsMode = false;
         }
     }
 }

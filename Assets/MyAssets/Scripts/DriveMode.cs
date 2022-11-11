@@ -14,7 +14,7 @@ public class DriveMode : MonoBehaviour
     [SerializeField] GameObject cameraManager;
     [SerializeField] GameObject cameraPlayer;
     [SerializeField] PlayerControl playerControl;
-    [SerializeField] CameraControl cameraControl;
+    [SerializeField] FirstThirdTrans fpsPlayer;
 
     CarMovement carMovement;
 
@@ -73,7 +73,8 @@ public class DriveMode : MonoBehaviour
     {
         playerTrans.position = playerHide.position;
         playerControl.enabled = false;
-        cameraControl.enabled = false;
+        fpsPlayer.enabled = false;
+        fpsPlayer.fpsPlayer.SetActive(false);
 
         cameraManager.SetActive(false);
         cameraPlayer.SetActive(false);
@@ -87,6 +88,8 @@ public class DriveMode : MonoBehaviour
     void Undrive()
     {
         cameraCar.SetActive(false);
+        fpsPlayer.enabled = true;
+        fpsPlayer.fpsPlayer.SetActive(false);
 
         carMovement.enabled = false;
         carMovement.driveMode = false;
