@@ -4,38 +4,41 @@ using UnityEngine;
 
 public class FirstThirdTrans : MonoBehaviour
 {
-    [SerializeField] Transform fpsCamPos;
-    [SerializeField] Transform cameraPos;
     [SerializeField] GameObject freeLookCamera;
-    CameraControl cameraControl;
-    bool fpsMode;
+    [SerializeField] GameObject fpsPlayer;
+    [SerializeField] GameObject cameraPlayer;
+    [SerializeField] GameObject playerModel;
+    [SerializeField] Transform cameraFpsPos;
+
+    PlayerControl playerControl;
 
     private void Awake()
     {
-        fpsMode = false;
-        cameraControl = GetComponent<CameraControl>();
-        cameraControl.enabled = false;
+        Cursor.lockState = CursorLockMode.Locked;
+        playerControl = GetComponent<PlayerControl>();
+        fpsPlayer.SetActive(false);
     }
 
     private void Update()
     {
-        if(Input.GetButtonDown("Fire2"))
+        if (Input.GetButtonDown("Fire2"))
         {
+            playerControl.enabled = false;
+            cameraPlayer.SetActive(false);
             freeLookCamera.SetActive(false);
-            cameraPos.position = fpsCamPos.position;
-            cameraPos.rotation = fpsCamPos.rotation;
+            playerModel.SetActive(false);
+            fpsPlayer.SetActive(true);
 
-            cameraControl.enabled = true;
-
-            fpsMode = true;
+            fpsPlayer.transform.position = cameraFpsPos.position;
         }
 
         if (Input.GetButtonUp("Fire2"))
         {
-            cameraControl.enabled = false;
+            playerControl.enabled = true;
+            fpsPlayer.SetActive(false);
+            playerModel.SetActive(true);
+            cameraPlayer.SetActive(true);
             freeLookCamera.SetActive(true);
-
-            fpsMode = false;
         }
     }
 }
